@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 
-	"github.com/markbates/pkger/cmd/pkger"
+	"github.com/markbates/pkger"
 	"github.com/pkg/browser"
 	log "github.com/sirupsen/logrus"
 )
@@ -17,15 +17,12 @@ var directoryPath string
 var listeningAddr string
 
 func init() {
-    directoryPath = "./web/dist"
-    listeningAddr = ":8080"
+    directoryPath = "/web/dist"
+    listeningAddr = ":8081"
 
-    // set up logrus configuration
-	log.SetLevel(log.DebugLevel)
-	log.SetFormatter(&log.TextFormatter{ForceColors: true})
 }
 
-func Serve() {
+func Serve() error {
 
 	// The router is now formed by calling the `newRouter` constructor function
 	// that we defined above. The rest of the code stays the same
@@ -42,19 +39,21 @@ func Serve() {
 
 	browser.OpenURL("http://localhost"+listeningAddr)
 
-	log.Fatal(http.ListenAndServe(listeningAddr, server))
-
-	//http.ListenAndServe(":8080", server)
+	err := http.ListenAndServe(listeningAddr, server)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	fmt.Fprintf(w, "{ status:green }")
 }
 
 func newRouter() *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/hello", handler).Methods("GET")
-
+	r.HandleFunc("/healthcheck", handler).Methods("GET")
+	pkger.Stat("github.com/markbates/pkger:/README.md")
 	// Declare the static file directory and point it to the
 	// directory we just made
 	staticFileDirectory := pkger.Dir(directoryPath) // http.Dir(directoryPath)
