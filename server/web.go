@@ -18,7 +18,7 @@ var listeningAddr string
 
 func init() {
     directoryPath = "/web/dist"
-    listeningAddr = ":8081"
+    listeningAddr = ":8080"
 
 }
 
@@ -53,7 +53,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func newRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/healthcheck", handler).Methods("GET")
-	pkger.Stat("github.com/markbates/pkger:/README.md")
+	//pkger.Stat("github.com/markbates/pkger:/README.md")
 	// Declare the static file directory and point it to the
 	// directory we just made
 	staticFileDirectory := pkger.Dir(directoryPath) // http.Dir(directoryPath)
