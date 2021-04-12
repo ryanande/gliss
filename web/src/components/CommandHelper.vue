@@ -15,6 +15,7 @@
           <code>./pcs {{ command.name }} {{ getcommandFlagValues }}
           </code>
         </pre>
+        <button type="button">Copy</button>
       </form>
     </details>
     <br />
@@ -31,19 +32,29 @@ export default {
         name: "< comandname >",
         description: "< detailed flag description here... >",
         flags: [
-          { name: "platform-name-a", description: "< flag description here... >", value: "avalue" },
-          { name: "platform-name-b", description: "< flag description here... >", value: "bvalue" }
-        ]
-      })
+          {
+            name: "platform-name",
+            description: "name of the platform",
+            value: "avalue",
+          },
+          {
+            name: "version",
+            description: "Attribute value of the platform version",
+            value: "",
+          },
+        ],
+      }),
     },
   },
   computed: {
     getcommandFlagValues() {
-      return this.command.flags.map(function(f){
-          return "--" + f.name + " " + f.value;
-      }).join(" ");
-    }
-  }
+      return this.command.flags
+        .map(function (f) {
+          return f.value == "" ? "" : "--" + f.name + " " + f.value;
+        })
+        .join(" ");
+    },
+  },
 };
 </script>
 

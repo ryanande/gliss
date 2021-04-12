@@ -26,7 +26,9 @@
       </p>
     </header>
     <main>
-      <CommandHelper />
+      <div v-for="(cmd, index) in commandsList.commands" :key="index">
+        <CommandHelper :command="cmd" />
+      </div>
       <hr />
     </main>
     <footer>
@@ -46,6 +48,119 @@ export default {
   components: {
     CommandHelper,
   },
+  methods: {
+    copyEventHandler() {},
+    copyToClipboard(text) {
+    if (window.clipboardData && window.clipboardData.setData) {
+        // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+        return window.clipboardData.setData("Text", text);
+
+    }
+    else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        }
+        catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return false;
+        }
+        finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+  }
+  data() {
+    return {
+      commandsList: {
+        commands: [
+          {
+            name: "register-platform",
+            description: "Register a platform with PCS",
+            flags: [
+              {
+                name: "platform-name",
+                description: "Name of the platform",
+                value: "avalue",
+              },
+              {
+                name: "version",
+                description: "Attribute value of the platform version",
+                value: "",
+              },
+              {
+                name: "capabilities",
+                description: "List of capabilities which the platform has",
+                value: "",
+              }
+            ]
+          },
+          {
+            name: "register-provider",
+            description: "Register and establish trust between PCS and a platform provider",
+            flags: [
+              {
+                name: "platform-name",
+                description: "Name of the platform",
+                value: "",
+              },
+              {
+                name: "provider",
+                description: "Name of the Provider. For example 'AWS'",
+                value: "",
+              },
+              {
+                name: "account-id",
+                description: "Provider account ID",
+                value: "",
+              }
+            ]
+          },
+          {
+            name: "register-api",
+            description: "Several steps taken here to establish the important pieces of an API: Ensure IGW exists, creates ALB, ....",
+            flags: [
+              {
+                name: "platform-name",
+                description: "Name of the platform",
+                value: "avalue",
+              },
+              {
+                name: "api-name",
+                description: "Name of the API service you are creating",
+                value: "",
+              },
+              {
+                name: "version",
+                description: "The version of the API Service",
+                value: "",
+              },
+              {
+                name: "vpc-id",
+                description: "VPC ID",
+                value: "",
+              },
+              {
+                name: "target-group-arn",
+                description: "Target Group ARN",
+                value: "",
+              },
+              {
+                name: "hosted-zone-id",
+                description: "hosted zone id of the service",
+                value: "",
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
 };
 </script>
 

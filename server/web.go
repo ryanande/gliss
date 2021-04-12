@@ -46,13 +46,25 @@ func Serve() error {
 	return nil
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func healthHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{ status:green }")
 }
 
+// func cobraCommandHandler(resp http.ResponseWriter, req *http.Request) {
+
+// 	config := "{ nme: false }"
+// 	jsonResp, err := json.Marshal(config)
+// 	if err != nil {
+// 		apiError(resp, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+	
+// 	_, _ = resp.Write(jsonResp)
+// }
+
 func newRouter() *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/healthcheck", handler).Methods("GET")
+	r.HandleFunc("/healthcheck", healthHandler).Methods("GET")
 	//pkger.Stat("github.com/markbates/pkger:/README.md")
 	// Declare the static file directory and point it to the
 	// directory we just made

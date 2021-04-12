@@ -1,7 +1,7 @@
 package main
 
 import (
-	"main/server"
+	"main/cmd"
 
 	"github.com/markbates/pkger"
 	log "github.com/sirupsen/logrus"
@@ -15,16 +15,5 @@ func init() {
 
 func main() {
 	pkger.Include("/web/dist")
-	if err := run(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func run() error {
-	err := server.Serve()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return nil
+	cmd.Execute()
 }
